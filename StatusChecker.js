@@ -3,6 +3,7 @@ var URL = "";
 var arrLinks = ['/'];
 var visitedLinks = [];
 var maxLinks = 100000;
+var debug = false;
 
 if (system.args.length === 1) {
     console.log('Pass the URL of the website as argument to this script!');
@@ -12,11 +13,27 @@ if (system.args.length === 1) {
     if (system.args.length > 2) {
       maxLinks = system.args[2];
     }
+   if (system.args.length > 3) {
+     debug = system.args[3];
+   }
 }
 
 function startChecking(url,callback,arrLinks,visitedLinks) {
 var page = require('webpage').create();
   //console.log('Testing URL ' + url + ' ...')
+  page.onError = function(msg, trace) {
+    if(debug) {
+    var msgStack = ['ERROR: ' + msg];
+    if (trace && trace.length) {
+        msgStack.push('TRACE:');
+        trace.forEach(function(t) {
+            msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function + '")' : ''));
+        });
+    }
+    console.error(msgStack.join('\n'));
+  }
+};
+  
   page.onResourceReceived = function(response) {
             if(response.status >= 400 && response.status < 500) {
               console.log('HTTP Client Error # ' + response.status + ' while testing URL ' + url +
@@ -29,9 +46,11 @@ var page = require('webpage').create();
           };
 
           page.open(url, function(status) {
-            console.log('Testing ' + url);
+            if(debug) {
+              console.log('Testing ' + url);
+            }
             if (status !== 'success') {
-              console.log('Unable to access network');
+              console.log('Unable to open (unexpected redirect) at URL ' + url);
             } else {
               var ua = page.evaluate(function() {
                 var listofanchortags = document.getElementsByTagName('a');
@@ -46,13 +65,14 @@ var page = require('webpage').create();
                   if(element.link === null) {
                     flag = false;
                   }
-                  else if(element.link == "/" || element.link == "#") {
+                  else if(element.link == "/" || element.link == "#" || element.link === "") {
                     flag = false; // filter links to same page
                   }
-                  else if(element.link.lastIndexOf("http://") === 0
-                          || element.link.lastIndexOf("https://") === 0
+                  else if(element.link.lastIndexOf("http:") === 0
+                          || element.link.lastIndexOf("https:") === 0
                           || element.link.lastIndexOf("mailto:") === 0 
-                          || element.link.lastIndexOf("tel:") === 0) {
+                          || element.link.lastIndexOf("tel:") === 0
+                         || element.link.lastIndexOf("//") === 0) {
                     flag = false; // filter external links
                   }
                   return flag;
@@ -62,7 +82,9 @@ var page = require('webpage').create();
                   });
                 return filteredlinks;
                  });
-              //console.log(JSON.stringify(ua));
+              if(debug) {
+                //console.log(JSON.stringify(ua));
+              }
               if (visitedLinks.indexOf(url) === -1) {
                   visitedLinks.push(url);
               }
