@@ -77,7 +77,7 @@ var page = require('webpage').create();
 function process(arrLinks, visitedLinks) {
 //console.log(visitedLinks);
 //console.log(arrLinks);
-if(arrLinks.length > 0 || maxLinks > 0) {
+if(arrLinks.length > 0 && maxLinks > 0) {
       var url = URL+arrLinks[0];
       maxLinks--;
       arrLinks.splice(0,1);
