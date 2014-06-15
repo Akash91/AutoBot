@@ -1,6 +1,6 @@
 var system = require('system');
 var URL = "";
-var arrLinks = ['/'];
+var arrLinks = [{link:'/',text:'__root__',parent:'__'}];
 var visitedLinks = [];
 var maxLinks = 100000;
 var debug = false;
@@ -16,6 +16,18 @@ if (system.args.length === 1) {
    if (system.args.length > 3) {
      debug = system.args[3];
    }
+}
+
+function getParent(url,arrLinks) {
+   var parent="";
+   //console.log(JSON.stringify(arrLinks));
+   for(var i = 0 ; i<arrLinks.length ; i++) {
+      if((URL+arrLinks[i].link) == url) {
+         parent = arrLinks[i].parent;
+         break;
+        }
+    } 
+  return parent;
 }
 
 function startChecking(url,callback,arrLinks,visitedLinks) {
@@ -35,14 +47,20 @@ var page = require('webpage').create();
 };
   
   page.onResourceReceived = function(response) {
+    // check for a resource only once, since it may be split in response
+          if(response.stage == "start") {
             if(response.status >= 400 && response.status < 500) {
-              console.log('HTTP Client Error # ' + response.status + ' while testing URL ' + url +
-                           ' with resource ' + response.url);
+              var parent = getParent(url,arrLinks);
+              //console.log(response.stage);
+              console.log('HTTP Client Error # ' + response.status + ' while testing URL ' + response.url
+                         + ' with parent URL ' + parent);
             }
             if(response.status >= 500 && response.status < 600) {
-              console.log('HTTP Server Error # ' + response.status + ' while testing URL ' + url +
-                           ' with resource ' + response.url);
+              var parent = getParent(url,arrLinks);
+              console.log('HTTP Server Error # ' + response.status + ' while testing URL ' + response.url
+                         + ' with parent URL ' + parent);
             }
+          }
           };
 
           page.open(url, function(status) {
@@ -50,14 +68,16 @@ var page = require('webpage').create();
               console.log('Testing ' + url);
             }
             if (status !== 'success') {
-              console.log('Unable to open (unexpected redirect) at URL ' + url);
+              var parent = getParent(url, arrLinks);
+              console.log('Unable to open (unexpected redirect) at URL ' + url + ' with parent URL '+ parent);
             } else {
-              var ua = page.evaluate(function() {
+              var ua = page.evaluate(function(url) {
                 var listofanchortags = document.getElementsByTagName('a');
-                var links = Array.prototype.map.call(listofanchortags,function(link,text){
+                var links = Array.prototype.map.call(listofanchortags,function(link){
                     return {
                       link : link.getAttribute('href'),
-                      text : link.textContent
+                      text : link.textContent,
+                      parent : url
                     };
                   });
                 var filteredlinks = links.filter(function(element){
@@ -78,10 +98,12 @@ var page = require('webpage').create();
                   return flag;
                 });
                 filteredlinks = Array.prototype.map.call(filteredlinks,function(ele){
-                    return ele.link;
+                  ele.link = ((ele.link.lastIndexOf("..") === 0 ||
+                              ele.link.lastIndexOf("/") !== 0) ? "/"+ele.link : ele.link);
+                  return ele;
                   });
                 return filteredlinks;
-                 });
+                 },url);
               if(debug) {
                 //console.log(JSON.stringify(ua));
               }
@@ -89,7 +111,7 @@ var page = require('webpage').create();
                   visitedLinks.push(url);
               }
               arrLinks = arrLinks.concat(ua);
-              arrLinks = arrLinks.filter(function(ele){return visitedLinks.indexOf(URL+ele) === -1;});
+              arrLinks = arrLinks.filter(function(ele){return visitedLinks.indexOf(URL+ele.link) === -1;});
             }
          page.close();
          callback(arrLinks,visitedLinks);
@@ -100,7 +122,7 @@ function process(arrLinks, visitedLinks) {
 //console.log(visitedLinks);
 //console.log(arrLinks);
 if(arrLinks.length > 0 && maxLinks > 0) {
-      var url = URL+arrLinks[0];
+      var url = URL+(arrLinks[0].link);
       maxLinks--;
       arrLinks.splice(0,1);
       startChecking(url,process,arrLinks,visitedLinks);
