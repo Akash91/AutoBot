@@ -65,11 +65,12 @@ var page = require('webpage').create();
 
           page.open(url, function(status) {
             if(debug) {
-              console.log('Testing ' + url);
+              console.log('Testing ' + page.url);
             }
-            if (status !== 'success') {
+            if (status !== 'success' || page.url.indexOf(URL) !== 0) {
               var parent = getParent(url, arrLinks);
-              console.log('Unable to open (unexpected redirect) at URL ' + url + ' with parent URL '+ parent);
+              console.log('Unable to open (unexpected redirect) at URL ' + url + ' with parent URL '+ parent
+                         + ' to URL ' + page.url);
             } else {
               var ua = page.evaluate(function(url) {
                 var listofanchortags = document.getElementsByTagName('a');
