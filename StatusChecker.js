@@ -92,14 +92,19 @@ var page = require('webpage').create();
                           || element.link.lastIndexOf("https:") === 0
                           || element.link.lastIndexOf("mailto:") === 0 
                           || element.link.lastIndexOf("tel:") === 0
-                         || element.link.lastIndexOf("//") === 0) {
+                          || element.link.lastIndexOf("//") === 0 
+                          || element.link.lastIndexOf("javascript:") === 0){ 
                     flag = false; // filter external links
                   }
                   return flag;
                 });
                 filteredlinks = Array.prototype.map.call(filteredlinks,function(ele){
-                  ele.link = ((ele.link.lastIndexOf("..") === 0 ||
-                              ele.link.lastIndexOf("/") !== 0) ? "/"+ele.link : ele.link);
+                  if(ele.link.lastIndexOf("..") === 0) {
+                    ele.link = "/"+ele.link;
+                  }
+                  else if(ele.link.indexOf("/") !== 0){
+                    ele.link = "/"+ele.link;
+                  }
                   return ele;
                   });
                 return filteredlinks;
