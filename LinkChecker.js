@@ -2,10 +2,11 @@ var system = require('system');
 var URL = "";
 var arrLinks = [{link:'/',text:'__root__',parent:'__'}];
 var visitedLinks = [];
-var maxLinks = 100;
-var skipExternal = false;
-var debug = false;
-var verbose = false;
+var maxLinks = 100; // maximum number of links to be checked, exits after that
+var skipExternal = false; // skip external links while checking, useful to test locally
+var followall = false; // follow all links, will make you crawl outside your website
+var debug = false; // prints a list of all urls checked
+var verbose = false; // prints detailed arrays showing visited links and queued links
 
 if (system.args.length === 1) {
     console.log('Pass the URL of the website as argument to this script!');
@@ -193,7 +194,7 @@ if(arrLinks.length > 0 && maxLinks > 0) {
     var domainOfURL = URL.match(r)[1];
     //console.log(domainOfLink);
     //console.log(domainOfURL);
-    if(domainOfLink == domainOfURL) {
+    if(domainOfLink == domainOfURL || followall) {
       follow = true;
     }
     else {
