@@ -150,7 +150,7 @@ var page = require('webpage').create();
                     }
                     else {
                       //ele.link = startwith + pageurl.match(r)[1] + '/' + ele.link;
-                      ele.link = pageurl.subtring(0,pageurl.lastIndexOf("/")) + ele.link;
+                      ele.link = pageurl.substring(0,pageurl.lastIndexOf("/")+1) + ele.link;
                     }
                   }
                   return ele;
