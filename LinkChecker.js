@@ -1,6 +1,6 @@
 var system = require('system');
 var URL = "";
-var arrLinks = [{link:'/',text:'__root__',parent:'__'}];
+var arrLinks = [{link:'/',text:'__root__',parent:'__init__'}];
 var visitedLinks = [];
 var maxLinks = 100; // maximum number of links to be checked, exits after that
 var skipExternal = false; // skip external links while checking, useful to test locally
@@ -84,7 +84,7 @@ var page = require('webpage').create();
             if(debug) {
               console.log('Testing ' + url);
            }
-            if (status !== 'success' && page.url.indexOf('about:blank') !== 0) {
+            if (status !== 'success' && page.url.indexOf('about:blank') !== 0 && page.url !==  url) {
               var parent = getParent(url, arrLinks);
               console.log('Unable to open (unexpected redirect) at URL ' + url + ' with parent URL '+ parent
                          + ' to URL ' + page.url);
@@ -148,7 +148,8 @@ var page = require('webpage').create();
                       ele.link = startwith + pageurl.match(r)[1] + '/' + ele.link.substring(1);
                     }
                     else {
-                      ele.link = startwith + pageurl.match(r)[1] + '/' + ele.link;
+                      //ele.link = startwith + pageurl.match(r)[1] + '/' + ele.link;
+                      ele.link = pageurl.subtring(0,pageurl.lastIndexOf("/")) + ele.link;
                     }
                   }
                   return ele;
