@@ -1,3 +1,4 @@
+// LinkChecker for AutoBot
 var system = require('system');
 var URL = "";
 var arrLinks = [{link:'/',text:'__root__',parent:'__'}];
