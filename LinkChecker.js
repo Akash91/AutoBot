@@ -6,7 +6,7 @@ var visitedLinks = [];
 var maxLinks = 100; // maximum number of links to be checked, exits after that
 var skipExternal = false; // skip external links while checking, useful to test locally
 var followall = false; // follow all links, will make you crawl outside your website
-var debug = false; // prints a list of all urls checked
+var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 
 if (system.args.length === 1) {
@@ -14,10 +14,10 @@ if (system.args.length === 1) {
     phantom.exit();
 } else {
     URL = system.args[1];
-   if (typeof String.prototype.endsWith != 'function' ) {
+   if (typeof String.prototype.endsWith !== 'function' ) {
       String.prototype.endsWith = function( str ) {
       return this.substring( this.length - str.length, this.length ) === str;
-      }
+      };
    } 
   if(URL.endsWith(".html")) { //todo : replace with a regex later
     arrLinks = [{link:'',text:'__root__',parent:'__'}];
@@ -27,7 +27,7 @@ if (system.args.length === 1) {
    }
 }
 
-console.log('Starting testing with URL ' + URL + ' ...')
+console.log('Starting testing with URL ' + URL + ' ...');
 
 function getParent(url,arrLinks) {
    var parent="";
@@ -35,9 +35,9 @@ function getParent(url,arrLinks) {
     console.log(JSON.stringify(arrLinks));
    }
    for(var i = 0 ; i<arrLinks.length ; i++) {
-      if(((URL+arrLinks[i].link) == url) || 
+      if(((URL+arrLinks[i].link) === url) || 
          ((arrLinks[i].link.lastIndexOf("http:") === 0 ||
-         arrLinks[i].link.lastIndexOf("https:") === 0) && arrLinks[i].link == url)) {
+         arrLinks[i].link.lastIndexOf("https:") === 0) && arrLinks[i].link === url)) {
          parent = arrLinks[i].parent;
          break;
         }
@@ -64,8 +64,8 @@ var page = require('webpage').create();
   
   page.onResourceReceived = function(response) {
     // check for a resource only once, since it may be split in response
-          if(response.stage == "start") {
-            if(follow || url == response.url) {
+          if(response.stage === "start") {
+            if(follow || url === response.url) {
               if(response.status >= 400 && response.status < 500) {
                 var parent = getParent(url,arrLinks);
                 //console.log(response.stage);
@@ -106,7 +106,7 @@ var page = require('webpage').create();
                   if(element.link === null) {
                     flag = false;
                   }
-                  else if(element.link == "/" || element.link == "#" /*|| element.link === ""*/) {
+                  else if(element.link === "/" || element.link === "#" /*|| element.link === ""*/) {
                     flag = false; // filter links to same page
                   }
                   else if(//element.link.lastIndexOf("http:") === 0
@@ -196,7 +196,7 @@ if(arrLinks.length > 0 && maxLinks > 0) {
     var domainOfURL = URL.match(r)[1];
     //console.log(domainOfLink);
     //console.log(domainOfURL);
-    if(domainOfLink == domainOfURL || followall) {
+    if(domainOfLink === domainOfURL || followall) {
       follow = true;
     }
     else {
