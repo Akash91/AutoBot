@@ -223,7 +223,6 @@ if(arrLinks.length > 0 && maxLinks > 0) {
      }
      else {
       maxLinks--;
-      //arrLinks.splice(0,1);
       startChecking(url,process,arrLinks,visitedLinks,follow);
      }
 }
