@@ -6,7 +6,7 @@ var visitedLinks = [];
 var maxLinks = 100; // maximum number of links to be checked, exits after that
 var skipExternal = false; // skip external links while checking, useful to test locally
 var followall = false; // follow all links, will make you crawl outside your website
-var debug = false; // prints a list of all urls checked
+var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 
 if (system.args.length === 1) {
@@ -129,6 +129,10 @@ var page = require('webpage').create();
                   if(ele.link.lastIndexOf("..") === 0) {
                     ele.link = "/"+ele.link;
                   }
+                  else if (ele.link.indexOf("http:") === 0 ||
+                           ele.link.indexOf("https:") === 0) {
+                    return ele;
+                  }
                   else if(ele.link.lastIndexOf("http:") !== 0 &&
                           ele.link.lastIndexOf("https:") !== 0) { //&&
                           //ele.link.indexOf("/") !== 0){
@@ -189,8 +193,8 @@ function process(arrLinks, visitedLinks) {
   var follow = true;
   var r = /:\/\/(.[^/]+)/;
 if(arrLinks.length > 0 && maxLinks > 0) {
-  if(arrLinks[0].link.lastIndexOf("http:") === 0 ||
-     arrLinks[0].link.lastIndexOf("https:") === 0){
+  if(arrLinks[0].link.indexOf("http:") === 0 ||
+     arrLinks[0].link.indexOf("https:") === 0){
       url = arrLinks[0].link;
     var domainOfLink = arrLinks[0].link.match(r)[1];
     var domainOfURL = URL.match(r)[1];
