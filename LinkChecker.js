@@ -6,7 +6,7 @@ var visitedLinks = [];
 var maxLinks = 100; // maximum number of links to be checked, exits after that
 var skipExternal = false; // skip external links while checking, useful to test locally
 var followall = false; // follow all links, will make you crawl outside your website
-var debug = true; // prints a list of all urls checked
+var debug = false; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 
 if (system.args.length === 1) {
