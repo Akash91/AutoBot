@@ -152,6 +152,12 @@ var page = require('webpage').create();
                     if(ele.link.indexOf("/") === 0) {
                       ele.link = startwith + pageurl.match(r)[1] + '/' + ele.link.substring(1);
                     }
+                    else if(ele.link.lastIndexOf("?") === 0 && pageurl.lastIndexOf("?") === -1) {
+                      ele.link = pageurl + ele.link;
+                    }
+                    else if(ele.link === "") {
+                      // empty link href
+                    }
                     else {
                       //ele.link = startwith + pageurl.match(r)[1] + '/' + ele.link;
                       ele.link = pageurl.substring(0,pageurl.lastIndexOf("/")+1) + ele.link;
