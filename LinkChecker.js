@@ -36,8 +36,8 @@ function getParent(url,arrLinks) {
    }
    for(var i = 0 ; i<arrLinks.length ; i++) {
       if(((URL+arrLinks[i].link) === url) || 
-         ((arrLinks[i].link.lastIndexOf("http:") === 0 ||
-         arrLinks[i].link.lastIndexOf("https:") === 0) && arrLinks[i].link === url)) {
+         ((arrLinks[i].link.lastIndexOf("http://") === 0 ||
+         arrLinks[i].link.lastIndexOf("https://") === 0) && arrLinks[i].link === url)) {
          parent = arrLinks[i].parent;
          break;
         }
@@ -129,12 +129,12 @@ var page = require('webpage').create();
                   if(ele.link.lastIndexOf("..") === 0) {
                     ele.link = "/"+ele.link;
                   }
-                  else if (ele.link.indexOf("http:") === 0 ||
-                           ele.link.indexOf("https:") === 0) {
+                  else if (ele.link.indexOf("http://") === 0 ||
+                           ele.link.indexOf("https://") === 0) {
                     return ele;
                   }
-                  else if(ele.link.lastIndexOf("http:") !== 0 &&
-                          ele.link.lastIndexOf("https:") !== 0) { //&&
+                  else if(ele.link.lastIndexOf("http://") !== 0 &&
+                          ele.link.lastIndexOf("https://") !== 0) { //&&
                           //ele.link.indexOf("/") !== 0){
                        if(ele.text.trim() !== "" && ele.link === "") {
                             ele.text = "__missing__link__"+ele.text.trim();
@@ -143,7 +143,7 @@ var page = require('webpage').create();
                          }
                         var r = /:\/\/(.[^/]+)/;
                         var startwith = "";
-                      if(pageurl.lastIndexOf("https:") === 0) {
+                      if(pageurl.lastIndexOf("https://") === 0) {
                         startwith = 'https://';
                       }
                       else {
@@ -199,8 +199,8 @@ function process(arrLinks, visitedLinks) {
   var follow = true;
   var r = /:\/\/(.[^/]+)/;
 if(arrLinks.length > 0 && maxLinks > 0) {
-  if(arrLinks[0].link.indexOf("http:") === 0 ||
-     arrLinks[0].link.indexOf("https:") === 0){
+  if(arrLinks[0].link.indexOf("http://") === 0 ||
+     arrLinks[0].link.indexOf("https://") === 0){
       url = arrLinks[0].link;
     var domainOfLink = arrLinks[0].link.match(r)[1];
     var domainOfURL = URL.match(r)[1];
