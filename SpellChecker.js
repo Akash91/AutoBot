@@ -161,7 +161,7 @@ var page = require('webpage').create();
               }
               //console.log(JSON.stringify(ua));
               var ual = ua.links;
-              var words = ua.text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()"?]/g," ").match(/\S+/g);
+              var words = ua.text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()"”?\]\[—]/g," ").match(/\S+/g);
               var i;
               var wrongwords = [];
               function isNumeric(obj) {
@@ -169,7 +169,8 @@ var page = require('webpage').create();
               };
               function skipWord(str) {
                 return isNumeric(str) || wrongwords.indexOf(str) !== -1 ||
-                       str.endsWith("ing") || str.endsWith("s") || str.endsWith("ed") || 
+                       str.endsWith("ing") || str.endsWith("s") || str.endsWith("ed") 
+                       || str.endsWith("’") || 
                        // hack to reduce false positives till a better dict is avail
                        str.charAt(0) === str.charAt(0).toUpperCase();   
               };
