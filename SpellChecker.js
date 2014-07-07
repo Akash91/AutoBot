@@ -1,6 +1,6 @@
 // SpellChecker for AutoBot
 var system = require('system');
-var bjs = require('./lib/BjSpell.js');
+var bjs = require('./lib/BJSpell.js');
 var URL = "";
 var arrLinks = [{link:'/',text:'__root__',parent:'__init__'}];
 var visitedLinks = [];
