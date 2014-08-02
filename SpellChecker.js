@@ -161,7 +161,7 @@ var page = require('webpage').create();
               }
               //console.log(JSON.stringify(ua));
               var ual = ua.links;
-              var words = ua.text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()"”?\]\[—]/g," ").match(/\S+/g);
+              var words = ua.text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`’@~()"”?\]\[—]/g," ").match(/\S+/g);
               var i;
               var wrongwords = [];
               function isNumeric(obj) {
