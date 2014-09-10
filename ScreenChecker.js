@@ -75,8 +75,6 @@ else {
             }
             takeScreenShot(customSize[0],customSize[1]);
             break;
-        case 4:
-            break;  
         default:
             phantom.exit();
         break;
