@@ -6,13 +6,13 @@ var URL = "";
 var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 var cleanURL;
-var count = 3;
+var sizearrcount = 3;
 var screentimeout = 2500;
 
 function delayRender() {
     setTimeout(function(){
-        takeScreenshot(sizearr[count][0], sizearr[count][1], count, delayRender);
-        count--;
+        takeScreenshot(sizearr[sizearrcount][0], sizearr[sizearrcount][1], sizearrcount, delayRender);
+        sizearrcount--;
     },screentimeout);
 }
 
@@ -41,11 +41,11 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
 
     page.onLoadFinished = function(status) {
         console.log("Generating screenshot for "+pagewidth+"x"+pageheight);
-        page.render(cleanURL+'/'+pagewidth+'x'+pageheight+'.png');
+        page.render(/*cleanURL+'/'+*/pagewidth+'x'+pageheight+'.png');
         if(count === 0) {
-            setTimeout(function(){
+            // setTimeout(function(){
                 phantom.exit();
-            },1000);
+            // },1000);
         }
         else {
             page.close();
@@ -80,7 +80,7 @@ else {
             break;
         case 3:
             var customSize = system.args[2].split('x');
-            takeScreenShot(customSize[0],customSize[1]);
+            takeScreenshot(customSize[0],customSize[1]);
             break;
         default:
             phantom.exit();
