@@ -7,16 +7,25 @@ var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 var cleanURL;
 var count = 3;
-var screentimeout = 3000;
+var screentimeout = 2500;
 
-var defaulScreenShots = function() {
-    takeScreenShot(sizearr[count][0], sizearr[count][1], count);
+function delayRender() {
+    setTimeout(function(){
+        takeScreenshot(sizearr[count][0], sizearr[count][1], count, delayRender);
+        count--;
+    },screentimeout);
 }
-var takeScreenShot = function (pagewidth, pageheight, count) {
+
+function takeScreenshot (pagewidth, pageheight, count, callback) {
+
+    // Count is undefined run the loop once
     if(typeof(count)==='undefined') {
         count = 0;
     }
-    var page = webpage.create();
+
+    var page = webpage.create(); //Creating a new page object
+
+    // To ignore js errors in page scripts
     page.onError = function(msg, trace) {
         if(debug && verbose) {
             var msgStack = ['ERROR: ' + msg];
@@ -29,6 +38,7 @@ var takeScreenShot = function (pagewidth, pageheight, count) {
             console.error(msgStack.join('\n'));
         }
     };
+
     page.onLoadFinished = function(status) {
         console.log("Generating screenshot for "+pagewidth+"x"+pageheight);
         page.render(cleanURL+'/'+pagewidth+'x'+pageheight+'.png');
@@ -38,17 +48,17 @@ var takeScreenShot = function (pagewidth, pageheight, count) {
             },1000);
         }
         else {
-            setTimeout(function(){
-                count--;
-                takeScreenShot(sizearr[count][0], sizearr[count][1], count);
-                page.close();
-            },screentimeout);
+            page.close();
+            callback();
         }
     };
+
+    // Set viewport size
     page.viewportSize = {
         width: pagewidth,
         height: pageheight
     };
+
     page.open(URL, function(status) {
         if (status !== 'success') {
             console.log('Unable to load the address!');
@@ -66,7 +76,7 @@ else {
     cleanURL = URL.replace(/.*?:\/\//g, "");
     switch(system.args.length) {
         case 2:
-            defaulScreenShots();
+            delayRender();
             break;
         case 3:
             var customSize = system.args[2].split('x');
