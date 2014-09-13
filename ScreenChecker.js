@@ -7,18 +7,14 @@ var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 var cleanURL;
 var sizearrcount = 3;
-var screentimeout = 3000;
+var resemblejs = require('./lib/resemble.js');
 
 function delayRender() {
     if(sizearrcount === -1) {
-        // setTimeout(function(){
         phantom.exit();
-        // },1000);
     }
-    //setTimeout(function(){
-        takeScreenshot(sizearr[sizearrcount][0], sizearr[sizearrcount][1], sizearrcount, delayRender);
-        sizearrcount--;
-    //},screentimeout);
+    takeScreenshot(sizearr[sizearrcount][0], sizearr[sizearrcount][1], sizearrcount, delayRender);
+    sizearrcount--;
 }
 
 function takeScreenshot (pagewidth, pageheight, count, callback) {
@@ -43,21 +39,7 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
             console.error(msgStack.join('\n'));
         }
     };
-/*
-    page.onLoadFinished = function(status) {
-        console.log("Generating screenshot for "+ pagewidth + "x" + pageheight);
-        page.render(cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
-        if(count === 0) {
-            // setTimeout(function(){
-                phantom.exit();
-            // },1000);
-        }
-        else {
-            page.close();
-            callback();
-        }
-    };
-*/
+
     // Set viewport size
     page.viewportSize = {
         width: pagewidth,
@@ -67,19 +49,28 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
     page.open(URL, function(status) {
         if (status !== 'success') {
             console.log('Unable to open the URL! ' + status);
-            //phantom.exit();
+            phantom.exit();
         }
         else {
-              result = page.evaluate(function () {
-                                     return document.getElementsByTagName('html');
-              });
-              console.log("Generating screenshot for "+ pagewidth + "x" + pageheight);
-              page.render(cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
+            result = page.evaluate(function () {
+            return document.getElementsByTagName('html');
+            });
+            console.log("Generating screenshot for "+ pagewidth + "x" + pageheight);
+            page.render(cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
         }
         page.close();
         if (count === -1) { phantom.exit();}
         else { callback();}
     });
+}
+
+function compareResemble() {
+    // Since resemble uses HTML5 canvas and javascript
+    // we have to simulate the process of file read with the FileReader API
+       // - inject 2 input tags in an html page
+       // - upload the screenshot and the desired png
+    // then use resemble to return an object in canvas which again has to be converted to an image
+    phantom.exit();
 }
 
 if (system.args.length === 1) {
@@ -95,9 +86,10 @@ else {
             break;
         case 3:
             var customSize = system.args[2].split('x');
-            //setTimeout(function(){
-                takeScreenshot(customSize[0],customSize[1],-1);
-            //},screentimeout);
+            takeScreenshot(customSize[0],customSize[1],-1);
+            break;
+        case 4:
+            compareResemble();
             break;
         default:
             phantom.exit();
