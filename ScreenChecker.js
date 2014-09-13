@@ -10,10 +10,15 @@ var sizearrcount = 3;
 var screentimeout = 3000;
 
 function delayRender() {
-    setTimeout(function(){
+    if(sizearrcount === -1) {
+        // setTimeout(function(){
+        phantom.exit();
+        // },1000);
+    }
+    //setTimeout(function(){
         takeScreenshot(sizearr[sizearrcount][0], sizearr[sizearrcount][1], sizearrcount, delayRender);
         sizearrcount--;
-    },screentimeout);
+    //},screentimeout);
 }
 
 function takeScreenshot (pagewidth, pageheight, count, callback) {
@@ -38,10 +43,10 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
             console.error(msgStack.join('\n'));
         }
     };
-
+/*
     page.onLoadFinished = function(status) {
         console.log("Generating screenshot for "+ pagewidth + "x" + pageheight);
-        page.render(/*cleanURL+'/'+*/cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
+        page.render(cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
         if(count === 0) {
             // setTimeout(function(){
                 phantom.exit();
@@ -52,7 +57,7 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
             callback();
         }
     };
-
+*/
     // Set viewport size
     page.viewportSize = {
         width: pagewidth,
@@ -62,8 +67,18 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
     page.open(URL, function(status) {
         if (status !== 'success') {
             console.log('Unable to open the URL! ' + status);
-            phantom.exit();
+            //phantom.exit();
         }
+        else {
+              result = page.evaluate(function () {
+                                     return document.getElementsByTagName('html');
+              });
+              console.log("Generating screenshot for "+ pagewidth + "x" + pageheight);
+              page.render(cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
+        }
+        page.close();
+        if (count === -1) { phantom.exit();}
+        else { callback();}
     });
 }
 
@@ -80,9 +95,9 @@ else {
             break;
         case 3:
             var customSize = system.args[2].split('x');
-            setTimeout(function(){
-                takeScreenshot(customSize[0],customSize[1]);
-            },screentimeout);
+            //setTimeout(function(){
+                takeScreenshot(customSize[0],customSize[1],-1);
+            //},screentimeout);
             break;
         default:
             phantom.exit();
