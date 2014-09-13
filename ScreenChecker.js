@@ -1,4 +1,4 @@
-// LinkChecker for AutoBot
+// ScreenChecker for AutoBot
 var system = require('system');
 var webpage = require('webpage');
 var sizearr = [[320 ,480],[768, 1024],[1280, 800],[1600, 990]];
@@ -7,7 +7,7 @@ var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
 var cleanURL;
 var sizearrcount = 3;
-var screentimeout = 2500;
+var screentimeout = 3000;
 
 function delayRender() {
     setTimeout(function(){
@@ -40,8 +40,8 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
     };
 
     page.onLoadFinished = function(status) {
-        console.log("Generating screenshot for "+pagewidth+"x"+pageheight);
-        page.render(/*cleanURL+'/'+*/pagewidth+'x'+pageheight+'.png');
+        console.log("Generating screenshot for "+ pagewidth + "x" + pageheight);
+        page.render(/*cleanURL+'/'+*/cleanURL +'_' + pagewidth + 'x'+ pageheight +'.png');
         if(count === 0) {
             // setTimeout(function(){
                 phantom.exit();
@@ -61,7 +61,7 @@ function takeScreenshot (pagewidth, pageheight, count, callback) {
 
     page.open(URL, function(status) {
         if (status !== 'success') {
-            console.log('Unable to load the address!');
+            console.log('Unable to open the URL! ' + status);
             phantom.exit();
         }
     });
@@ -80,7 +80,9 @@ else {
             break;
         case 3:
             var customSize = system.args[2].split('x');
-            takeScreenshot(customSize[0],customSize[1]);
+            setTimeout(function(){
+                takeScreenshot(customSize[0],customSize[1]);
+            },screentimeout);
             break;
         default:
             phantom.exit();
