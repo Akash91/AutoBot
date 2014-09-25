@@ -1,7 +1,7 @@
 // FormChecker for AutoBot
 var system = require('system');
 var URL = ""; // can test insecure form submission with URL http://www.stealmylogin.com/demo.html
-var formID = ""; // for facebook.com the value is login-form
+var formID = "login_form"; // for facebook.com the value is login_form
 var usernameField = "username"; // for facebook.com the value is email
 var username = "";
 var passwordField = "password"; // for facebook.com the value is pass
@@ -108,7 +108,7 @@ function fillForm(url, page, callback, formID, usernameField, passwordField, use
 	}
 			
 	page.open(url, function(status) {
-          if(status !== 'status') {
+          if(status !== 'success') {
             console.log('Unable to load page with URL ' + page.url);
             phantom.exit();
           }
