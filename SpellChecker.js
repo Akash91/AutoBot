@@ -170,7 +170,7 @@ var page = require('webpage').create();
               function skipWord(str) {
                 return isNumeric(str) || wrongwords.indexOf(str) !== -1 ||
                        str.endsWith("ing") || str.endsWith("s") || str.endsWith("ed") 
-                       || str.endsWith("’") || 
+                       || str.endsWith("’") || !str.match(/^[0-9a-zA-Z]+$/) ||
                        // hack to reduce false positives till a better dict is avail
                        str.charAt(0) === str.charAt(0).toUpperCase();   
               };
