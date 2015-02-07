@@ -113,7 +113,9 @@ var page = require('webpage').create();
                           || element.link.substring(element.link.length-(".ppt").length, element.link.length) === ".ppt"
                           || element.link.substring(element.link.length-(".pptx").length, element.link.length) === ".pptx"
                           || element.link.substring(element.link.length-(".doc").length, element.link.length) === ".doc"
-                          || element.link.substring(element.link.length-(".docx").length, element.link.length) === ".docx"                          
+                          || element.link.substring(element.link.length-(".docx").length, element.link.length) === ".docx"    
+                          || element.link.substring(element.link.length-(".xls").length, element.link.length) === ".xls"
+                          || element.link.substring(element.link.length-(".xlsx").length, element.link.length) === ".xlsx"                                                 
                           ) { 
                     flag = false; // filter external links
                   }
