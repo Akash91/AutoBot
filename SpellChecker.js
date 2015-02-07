@@ -104,10 +104,16 @@ var page = require('webpage').create();
                           || element.link.lastIndexOf("javascript:") === 0
                           || element.link.lastIndexOf("//") === 0 
                           || element.link.lastIndexOf("#") === 0
-                          || element.link.endsWith(".pdf")
-                          //|| element.link.endsWith(".ppt")
-                          //|| element.link.endsWith(".pptx")
-                          //|| element.link.endsWith(".ps") 
+                          // Use the endsWith function inline since for some reason it gives a undefined otherwise
+                          // Extensions to ignore since we cannot check spelling in these files
+                          || element.link.substring(element.link.length-(".pdf").length, element.link.length) === ".pdf"
+                          || element.link.substring(element.link.length-(".ps").length, element.link.length) === ".ps"
+                          || element.link.substring(element.link.length-(".zip").length, element.link.length) === ".zip"
+                          || element.link.substring(element.link.length-(".exe").length, element.link.length) === ".exe"
+                          || element.link.substring(element.link.length-(".ppt").length, element.link.length) === ".ppt"
+                          || element.link.substring(element.link.length-(".pptx").length, element.link.length) === ".pptx"
+                          || element.link.substring(element.link.length-(".doc").length, element.link.length) === ".doc"
+                          || element.link.substring(element.link.length-(".docx").length, element.link.length) === ".docx"                          
                           ) { 
                     flag = false; // filter external links
                   }
