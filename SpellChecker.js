@@ -104,7 +104,7 @@ var page = require('webpage').create();
                           || element.link.lastIndexOf("javascript:") === 0
                           || element.link.lastIndexOf("//") === 0 
                           || element.link.lastIndexOf("#") === 0
-                          //|| element.link.endsWith(".pdf")
+                          || element.link.endsWith(".pdf")
                           //|| element.link.endsWith(".ppt")
                           //|| element.link.endsWith(".pptx")
                           //|| element.link.endsWith(".ps") 
@@ -161,7 +161,7 @@ var page = require('webpage').create();
               }
               //console.log(JSON.stringify(ua));
               var ual = ua.links;
-              var words = ua.text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`’@~()"”?\]\[—]/g," ").match(/\S+/g);
+              var words = ua.text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`@~()"”?\]\[—]/g," ").match(/\S+/g);
               var i;
               var wrongwords = [];
               function isNumeric(obj) {

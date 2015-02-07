@@ -85,7 +85,8 @@ var page = require('webpage').create();
             if(debug) {
               console.log('Testing ' + url);
            }
-            if (status !== 'success' && page.url.indexOf('about:blank') !== 0 && page.url !==  url) {
+            if (status !== 'success' && (page.url.indexOf('about:blank') !== 0 && page.url !== "") //added for PhatntomJS 2
+              && page.url !==  url) {
               var parent = getParent(url, arrLinks);
               console.log('Unable to open (unexpected redirect) at URL ' + url + ' with parent URL '+ parent
                          + ' to URL ' + page.url);
