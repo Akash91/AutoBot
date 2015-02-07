@@ -5,7 +5,7 @@ var URL = "";
 var arrLinks = [{link:'/',text:'__root__',parent:'__init__'}];
 var visitedLinks = [];
 var maxLinks = 100; // maximum number of links to be checked, exits after that
-var skipExternal = true; // skip external links while checking, useful to test locally
+var skipExternal = true; // skip external links while checking, do not check spelling for content hosted somewhere else
 var followall = false; // follow all links, will make you crawl outside your website
 var debug = true; // prints a list of all urls checked
 var verbose = false; // prints detailed arrays showing visited links and queued links
@@ -172,7 +172,7 @@ var page = require('webpage').create();
                        str.endsWith("ing") || str.endsWith("s") || str.endsWith("ed") 
                        || str.endsWith("’") || !str.match(/^[0-9a-zA-Z]+$/) ||
                        // hack to reduce false positives till a better dict is avail
-                       str.charAt(0) === str.charAt(0).toUpperCase();   
+                       str.charAt(0) === str.charAt(0).toUpperCase();  // ignore words with first letter capitalized 
               };
               if(words !==  null) {
                 for(i=0;i<words.length;i++){
