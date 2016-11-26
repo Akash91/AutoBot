@@ -11,7 +11,7 @@ As of now, it consists of:
 
 ### [Dependencies]
 In order to use any of the scripts you will need - [PhantomJS](http://phantomjs.org/)
-Here is the download [link](http://phantomjs.org/download.html) for your specific 
+Here is the download [link](http://phantomjs.org/download.html) for your specific platform. You can also install with HomeBrew using `brew install phantomjs`
 
 ### [Quick Start]
 Make sure you have phantomjs installed before you try using any of the above mentioned scripts.
