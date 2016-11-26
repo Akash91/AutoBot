@@ -10,7 +10,7 @@ As of now, it consists of:
 * ScreenChecker.js - Tests for page renderings in different viewports and compares with a sample image.
 
 ### [Dependencies]
-In order to use any of the scripts you will need - [PhantomJS](http://phantomjs.org/)
+In order to use any of the scripts you will need - [PhantomJS](http://phantomjs.org/).
 Here is the download [link](http://phantomjs.org/download.html) for your specific platform. You can also install with HomeBrew using `brew install phantomjs`
 
 ### [Quick Start]
