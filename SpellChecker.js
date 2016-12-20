@@ -20,7 +20,7 @@ if (system.args.length === 1) {
 } else {
     URL = system.args[1];
     if (typeof String.prototype.endsWith !== 'function') {
-        String.prototype.endsWith = function(str) {
+        String.prototype.endsWith = function (str) {
             return this.substring(this.length - str.length, this.length) === str;
         };
     }
@@ -46,7 +46,7 @@ function getParent(url, arrLinks) {
     for (var i = 0; i < arrLinks.length; i++) {
         if (((URL + arrLinks[i].link) === url) ||
             ((arrLinks[i].link.lastIndexOf("http://") === 0 ||
-                arrLinks[i].link.lastIndexOf("https://") === 0) && arrLinks[i].link === url)) {
+            arrLinks[i].link.lastIndexOf("https://") === 0) && arrLinks[i].link === url)) {
             parent = arrLinks[i].parent;
             break;
         }
@@ -58,20 +58,20 @@ function startChecking(url, callback, arrLinks, visitedLinks, follow) {
     var page = require('webpage').create();
     //console.log('Testing URL ' + url + ' ...')
 
-    page.onError = function(msg, trace) {
+    page.onError = function (msg, trace) {
         if (debug && verbose) {
             var msgStack = ['ERROR: ' + msg];
             if (trace && trace.length) {
                 msgStack.push('TRACE:');
-                trace.forEach(function(t) {
-                    msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function+'")' : ''));
+                trace.forEach(function (t) {
+                    msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function + '")' : ''));
                 });
             }
             console.error(msgStack.join('\n'));
         }
     };
 
-    page.open(url, follow, function(status) {
+    page.open(url, follow, function (status) {
         if (debug) {
             console.log('Testing ' + url);
         }
@@ -81,7 +81,7 @@ function startChecking(url, callback, arrLinks, visitedLinks, follow) {
                 ' to URL ' + page.url);
         } else {
             var pageurl = page.url;
-            var ua = page.evaluate(function(url, follow, pageurl) {
+            var ua = page.evaluate(function (url, follow, pageurl) {
                 if (!follow) return [];
                 var listofanchortags = document.getElementsByTagName('a');
                 var listofparatags = document.getElementsByTagName('p');
@@ -90,45 +90,45 @@ function startChecking(url, callback, arrLinks, visitedLinks, follow) {
                 for (i = 0; i < listofparatags.length; i++) {
                     ptext = ptext.concat(listofparatags[i].textContent).concat(" ");
                 }
-                var links = Array.prototype.map.call(listofanchortags, function(link) {
+                var links = Array.prototype.map.call(listofanchortags, function (link) {
                     return {
                         link: link.getAttribute('href'),
                         text: link.textContent,
                         parent: url
                     };
                 });
-                var filteredlinks = links.filter(function(element) {
+                var filteredlinks = links.filter(function (element) {
                     var flag = true;
                     if (element.link === null) {
                         flag = false;
-                    } else if (element.link === "/" || element.link === "#" /*|| element.link === ""*/ ) {
+                    } else if (element.link === "/" || element.link === "#" /*|| element.link === ""*/) {
                         flag = false; // filter links to same page
                     } else if ( //element.link.lastIndexOf("http:") === 0
-                        //|| element.link.lastIndexOf("https:") === 0
-                        element.link.lastIndexOf("mailto:") === 0 ||
-                        element.link.lastIndexOf("tel:") === 0 ||
-                        element.link.lastIndexOf("javascript:") === 0 ||
-                        element.link.lastIndexOf("//") === 0 ||
-                        element.link.lastIndexOf("#") === 0
-                        // Use the endsWith function inline since for some reason it gives a undefined otherwise
-                        // Extensions to ignore since we cannot check spelling in these files
-                        ||
-                        element.link.substring(element.link.length - (".pdf").length, element.link.length) === ".pdf" ||
-                        element.link.substring(element.link.length - (".ps").length, element.link.length) === ".ps" ||
-                        element.link.substring(element.link.length - (".zip").length, element.link.length) === ".zip" ||
-                        element.link.substring(element.link.length - (".exe").length, element.link.length) === ".exe" ||
-                        element.link.substring(element.link.length - (".ppt").length, element.link.length) === ".ppt" ||
-                        element.link.substring(element.link.length - (".pptx").length, element.link.length) === ".pptx" ||
-                        element.link.substring(element.link.length - (".doc").length, element.link.length) === ".doc" ||
-                        element.link.substring(element.link.length - (".docx").length, element.link.length) === ".docx" ||
-                        element.link.substring(element.link.length - (".xls").length, element.link.length) === ".xls" ||
-                        element.link.substring(element.link.length - (".xlsx").length, element.link.length) === ".xlsx"
+                    //|| element.link.lastIndexOf("https:") === 0
+                    element.link.lastIndexOf("mailto:") === 0 ||
+                    element.link.lastIndexOf("tel:") === 0 ||
+                    element.link.lastIndexOf("javascript:") === 0 ||
+                    element.link.lastIndexOf("//") === 0 ||
+                    element.link.lastIndexOf("#") === 0
+                    // Use the endsWith function inline since for some reason it gives a undefined otherwise
+                    // Extensions to ignore since we cannot check spelling in these files
+                    ||
+                    element.link.substring(element.link.length - (".pdf").length, element.link.length) === ".pdf" ||
+                    element.link.substring(element.link.length - (".ps").length, element.link.length) === ".ps" ||
+                    element.link.substring(element.link.length - (".zip").length, element.link.length) === ".zip" ||
+                    element.link.substring(element.link.length - (".exe").length, element.link.length) === ".exe" ||
+                    element.link.substring(element.link.length - (".ppt").length, element.link.length) === ".ppt" ||
+                    element.link.substring(element.link.length - (".pptx").length, element.link.length) === ".pptx" ||
+                    element.link.substring(element.link.length - (".doc").length, element.link.length) === ".doc" ||
+                    element.link.substring(element.link.length - (".docx").length, element.link.length) === ".docx" ||
+                    element.link.substring(element.link.length - (".xls").length, element.link.length) === ".xls" ||
+                    element.link.substring(element.link.length - (".xlsx").length, element.link.length) === ".xlsx"
                     ) {
                         flag = false; // filter external links
                     }
                     return flag;
                 });
-                filteredlinks = Array.prototype.map.call(filteredlinks, function(ele) {
+                filteredlinks = Array.prototype.map.call(filteredlinks, function (ele) {
                     if (ele.link.lastIndexOf("..") === 0) {
                         ele.link = "/" + ele.link;
                     } else if (ele.link.indexOf("http://") === 0 ||
@@ -200,13 +200,13 @@ function startChecking(url, callback, arrLinks, visitedLinks, follow) {
             }
             //console.log(ua.text.match(/\S+/g));
             //console.log(JSON.stringify(ual));
-            ual = ual.filter(function(ele) {
+            ual = ual.filter(function (ele) {
                 return arrLinks.indexOf(ele.link) === -1;
             });
             //console.log(JSON.stringify(ua));
             arrLinks = arrLinks.concat(ual);
             //console.log(JSON.stringify(arrLinks));
-            arrLinks = arrLinks.filter(function(ele) {
+            arrLinks = arrLinks.filter(function (ele) {
                 return visitedLinks.indexOf(URL + ele.link) === -1 &&
                     visitedLinks.indexOf(ele.link) === -1;
             });
@@ -221,7 +221,7 @@ function startChecking(url, callback, arrLinks, visitedLinks, follow) {
 function process(arrLinks, visitedLinks) {
     if (verbose && !debug) {
         console.log('Visited - ' + visitedLinks);
-        var workList = Array.prototype.map.call(arrLinks, function(ele) {
+        var workList = Array.prototype.map.call(arrLinks, function (ele) {
             return ele.link;
         });
         console.log('In queqe - ' + workList);
@@ -267,7 +267,7 @@ function process(arrLinks, visitedLinks) {
     }
 }
 
-var lang = BJSpell("en_US.js", function() {
+var lang = BJSpell("en_US.js", function () {
     console.log('Dictionary loaded successfully ...');
     process(arrLinks, visitedLinks);
 });

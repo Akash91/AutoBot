@@ -18,7 +18,7 @@ if (system.args.length === 1) {
       String.prototype.endsWith = function( str ) {
       return this.substring( this.length - str.length, this.length ) === str;
       };
-   } 
+   }
   if(URL.endsWith(".html")) { //todo : replace with a regex later
     arrLinks = [{link:'',text:'__root__',parent:'__'}];
    }
@@ -35,20 +35,20 @@ function getParent(url,arrLinks) {
     console.log(JSON.stringify(arrLinks));
    }
    for(var i = 0 ; i<arrLinks.length ; i++) {
-      if(((URL+arrLinks[i].link) === url) || 
+      if(((URL+arrLinks[i].link) === url) ||
          ((arrLinks[i].link.lastIndexOf("http://") === 0 ||
          arrLinks[i].link.lastIndexOf("https://") === 0) && arrLinks[i].link === url)) {
          parent = arrLinks[i].parent;
          break;
         }
-    } 
+    }
   return parent;
 }
 
 function startChecking(url,callback,arrLinks,visitedLinks,follow) {
 var page = require('webpage').create();
   //console.log('Testing URL ' + url + ' ...')
-  
+
   page.onError = function(msg, trace) {
     if(debug && verbose) {
     var msgStack = ['ERROR: ' + msg];
@@ -61,7 +61,7 @@ var page = require('webpage').create();
     console.error(msgStack.join('\n'));
   }
 };
-  
+
   page.onResourceReceived = function(response) {
     // check for a resource only once, since it may be split in response
           if(response.stage === "start") {
@@ -93,7 +93,7 @@ var page = require('webpage').create();
             } else {
               var pageurl = page.url;
               var ua = page.evaluate(function(url,follow,pageurl) {
-                if(!follow) return []; 
+                if(!follow) return [];
                 var listofanchortags = document.getElementsByTagName('a');
                 var links = Array.prototype.map.call(listofanchortags,function(link){
                     return {
@@ -112,16 +112,16 @@ var page = require('webpage').create();
                   }
                   else if(//element.link.lastIndexOf("http:") === 0
                           //|| element.link.lastIndexOf("https:") === 0
-                          element.link.lastIndexOf("mailto:") === 0 
+                          element.link.lastIndexOf("mailto:") === 0
                           || element.link.lastIndexOf("tel:") === 0
                           || element.link.lastIndexOf("javascript:") === 0
-                          || element.link.lastIndexOf("//") === 0 
+                          || element.link.lastIndexOf("//") === 0
                           || element.link.lastIndexOf("#") === 0
                           //|| element.link.endsWith(".pdf")
                           //|| element.link.endsWith(".ppt")
                           //|| element.link.endsWith(".pptx")
-                          //|| element.link.endsWith(".ps") 
-                          ) { 
+                          //|| element.link.endsWith(".ps")
+                          ) {
                     flag = false; // filter external links
                   }
                   return flag;
@@ -178,14 +178,14 @@ var page = require('webpage').create();
               //console.log(JSON.stringify(ua));
               arrLinks = arrLinks.concat(ua);
               //console.log(JSON.stringify(arrLinks));
-              arrLinks = arrLinks.filter(function(ele) { 
+              arrLinks = arrLinks.filter(function(ele) {
                   return visitedLinks.indexOf(URL+ele.link) === -1
                    && visitedLinks.indexOf(ele.link) === -1;
               });
               //console.log(JSON.stringify(arrLinks));
             }
          page.close();
-         arrLinks.splice(0,1);   
+         arrLinks.splice(0,1);
          callback(arrLinks,visitedLinks);
     });
 }
@@ -227,10 +227,10 @@ if(arrLinks.length > 0 && maxLinks > 0) {
        process(arrLinks, visitedLinks);
      }
   else if(arrLinks[0].text.lastIndexOf("__missing__link__") === 0) {
-      console.log('Missing link found at URL ' + arrLinks[0].parent+ ' with text ' 
+      console.log('Missing link found at URL ' + arrLinks[0].parent+ ' with text '
                   + arrLinks[0].text.substring(17));
-      arrLinks.splice(0,1);            
-      process(arrLinks, visitedLinks);            
+      arrLinks.splice(0,1);
+      process(arrLinks, visitedLinks);
      }
      else {
       maxLinks--;
