@@ -1,5 +1,5 @@
 
-AutoBot[ ![Codeship Status for codelion/AutoBot](https://codeship.com/projects/8de6d120-4794-0132-2f6b-16fd1ca0a3af/status?branch=master)](https://codeship.com/projects/45652)
+AutoBot
 =======
 This repo comprises of a set of utility scripts for testing webpages for errors.
 As of now, it consists of:
